@@ -9,10 +9,6 @@ import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.Charset;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.ByteBufProcessor;
-
 public class NettyChannelBuffer implements ChannelBuffer {
     
     private final io.netty.buffer.ByteBuf byteBuf;
@@ -49,525 +45,534 @@ public class NettyChannelBuffer implements ChannelBuffer {
     }
 
     public int readerIndex() {
-        return 0;
+        return this.byteBuf.readerIndex();
     }
 
     public ChannelBuffer readerIndex(int paramInt) {
-        return null;
+        this.byteBuf.readerIndex(paramInt);
+        return this;
     }
 
     public int writerIndex() {
-        return 0;
+        return this.byteBuf.writerIndex();
     }
 
     public ChannelBuffer writerIndex(int paramInt) {
-        return null;
+        this.byteBuf.writerIndex(paramInt);
+        return this;
     }
 
     public ChannelBuffer setIndex(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setIndex(paramInt1, paramInt2);
+        return this;
     }
 
     public int readableBytes() {
-        return 0;
+        return this.byteBuf.readableBytes();
     }
 
     public int writableBytes() {
-        return 0;
+        return this.byteBuf.writableBytes();
     }
 
     public int maxWritableBytes() {
-        return 0;
+        return this.byteBuf.maxWritableBytes();
     }
 
     public boolean isReadable() {
-        return false;
+        return this.byteBuf.isReadable();
     }
 
     public boolean isReadable(int paramInt) {
-        return false;
+        return this.byteBuf.isReadable(paramInt);
     }
 
     public boolean isWritable() {
-        return false;
+        return this.byteBuf.isWritable();
     }
 
     public boolean isWritable(int paramInt) {
-        return false;
+        return this.byteBuf.isWritable(paramInt);
     }
 
     public ChannelBuffer clear() {
-        return null;
+        this.byteBuf.clear();
+        return this;
     }
 
     public ChannelBuffer markReaderIndex() {
-        return null;
+        this.byteBuf.markReaderIndex();
+        return this;
     }
 
     public ChannelBuffer resetReaderIndex() {
-        return null;
+        this.byteBuf.resetReaderIndex();
+        return this;
     }
 
     public ChannelBuffer markWriterIndex() {
-        return null;
+        this.byteBuf.markWriterIndex();
+        return this;
     }
 
     public ChannelBuffer resetWriterIndex() {
-        return null;
+        this.byteBuf.resetWriterIndex();
+        return this;
     }
 
     public ChannelBuffer discardReadBytes() {
-        return null;
+        this.byteBuf.discardReadBytes();
+        return this;
     }
 
     public ChannelBuffer discardSomeReadBytes() {
-        return null;
+        this.byteBuf.discardSomeReadBytes();
+        return this;
     }
 
     public ChannelBuffer ensureWritable(int paramInt) {
-        return null;
+        this.byteBuf.ensureWritable(paramInt);
+        return this;
     }
 
     public int ensureWritable(int paramInt, boolean paramBoolean) {
-        return 0;
+        return this.byteBuf.ensureWritable(paramInt, paramBoolean);
     }
 
     public boolean getBoolean(int paramInt) {
-        return false;
+        return this.byteBuf.getBoolean(paramInt);
     }
 
     public byte getByte(int paramInt) {
-        return 0;
+        return this.byteBuf.getByte(paramInt);
     }
 
     public short getUnsignedByte(int paramInt) {
-        return 0;
+        return this.byteBuf.getUnsignedByte(paramInt);
     }
 
     public short getShort(int paramInt) {
-        return 0;
+        return this.byteBuf.getShort(paramInt);
     }
 
     public int getUnsignedShort(int paramInt) {
-        return 0;
+        return this.byteBuf.getUnsignedShort(paramInt);
     }
 
     public int getMedium(int paramInt) {
-        return 0;
+        return this.byteBuf.getMedium(paramInt);
     }
 
     public int getUnsignedMedium(int paramInt) {
-        return 0;
+        return this.byteBuf.getUnsignedMedium(paramInt);
     }
 
     public int getInt(int paramInt) {
-        return 0;
+        return this.byteBuf.getInt(paramInt);
     }
 
     public long getUnsignedInt(int paramInt) {
-        return 0;
+        return this.byteBuf.getUnsignedInt(paramInt);
     }
 
     public long getLong(int paramInt) {
-        return 0;
+        return this.byteBuf.getLong(paramInt);
     }
 
     public char getChar(int paramInt) {
-        return 0;
+        return this.byteBuf.getChar(paramInt);
     }
 
     public float getFloat(int paramInt) {
-        return 0;
+        return this.byteBuf.getFloat(paramInt);
     }
 
     public double getDouble(int paramInt) {
-        return 0;
-    }
-
-    public ChannelBuffer getBytes(int paramInt, ChannelBuffer paramByteBuf) {
-        return null;
-    }
-
-    public ChannelBuffer getBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2) {
-        return null;
-    }
-
-    public ChannelBuffer getBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2,
-                                  int paramInt3) {
-        return null;
+        return this.byteBuf.getDouble(paramInt);
     }
 
     public ChannelBuffer getBytes(int paramInt, byte[] paramArrayOfByte) {
-        return null;
+        this.byteBuf.getBytes(paramInt, paramArrayOfByte);
+        return this;
     }
 
     public ChannelBuffer getBytes(int paramInt1, byte[] paramArrayOfByte, int paramInt2,
                                   int paramInt3) {
-        return null;
+        this.byteBuf.getBytes(paramInt1, paramArrayOfByte, paramInt2, paramInt3);
+        return this;
     }
 
     public ChannelBuffer getBytes(int paramInt, ByteBuffer paramByteBuffer) {
-        return null;
+        this.byteBuf.getBytes(paramInt, paramByteBuffer);
+        return this;
     }
 
     public ChannelBuffer getBytes(int paramInt1, OutputStream paramOutputStream,
                                   int paramInt2) throws IOException {
-        return null;
+        this.byteBuf.getBytes(paramInt1, paramOutputStream, paramInt2);
+        return this;
     }
 
     public int getBytes(int paramInt1, GatheringByteChannel paramGatheringByteChannel,
                         int paramInt2) throws IOException {
-        return 0;
+        return this.byteBuf.getBytes(paramInt1, paramGatheringByteChannel, paramInt2);
     }
 
     public ChannelBuffer setBoolean(int paramInt, boolean paramBoolean) {
-        return null;
+        this.byteBuf.setBoolean(paramInt, paramBoolean);
+        return this;
     }
 
     public ChannelBuffer setByte(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setByte(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer setShort(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setShort(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer setMedium(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setMedium(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer setInt(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setInt(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer setLong(int paramInt, long paramLong) {
-        return null;
+        this.byteBuf.setLong(paramInt, paramLong);
+        return this;
     }
 
     public ChannelBuffer setChar(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setChar(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer setFloat(int paramInt, float paramFloat) {
-        return null;
+        this.byteBuf.setFloat(paramInt, paramFloat);
+        return this;
     }
 
     public ChannelBuffer setDouble(int paramInt, double paramDouble) {
-        return null;
-    }
-
-    public ChannelBuffer setBytes(int paramInt, ChannelBuffer paramByteBuf) {
-        return null;
-    }
-
-    public ChannelBuffer setBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2) {
-        return null;
-    }
-
-    public ChannelBuffer setBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2,
-                                  int paramInt3) {
-        return null;
+        this.byteBuf.setDouble(paramInt, paramDouble);
+        return this;
     }
 
     public ChannelBuffer setBytes(int paramInt, byte[] paramArrayOfByte) {
-        return null;
+        this.byteBuf.setBytes(paramInt, paramArrayOfByte);
+        return this;
     }
 
     public ChannelBuffer setBytes(int paramInt1, byte[] paramArrayOfByte, int paramInt2,
                                   int paramInt3) {
-        return null;
+        this.byteBuf.setBytes(paramInt1, paramArrayOfByte, paramInt2, paramInt3);
+        return this;
     }
 
     public ChannelBuffer setBytes(int paramInt, ByteBuffer paramByteBuffer) {
-        return null;
+        this.byteBuf.setBytes(paramInt, paramByteBuffer);
+        return this;
     }
 
     public int setBytes(int paramInt1, InputStream paramInputStream,
                         int paramInt2) throws IOException {
-        return 0;
+        return this.byteBuf.setBytes(paramInt1, paramInputStream, paramInt2);
     }
 
     public int setBytes(int paramInt1, ScatteringByteChannel paramScatteringByteChannel,
                         int paramInt2) throws IOException {
-        return 0;
+        return this.byteBuf.setBytes(paramInt1, paramScatteringByteChannel, paramInt2);
     }
 
     public ChannelBuffer setZero(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.setZero(paramInt1, paramInt2);
+        return this;
     }
 
     public boolean readBoolean() {
-        return false;
+        return this.byteBuf.readBoolean();
     }
 
     public byte readByte() {
-        return 0;
+        return this.byteBuf.readByte();
     }
 
     public short readUnsignedByte() {
-        return 0;
+        return this.byteBuf.readUnsignedByte();
     }
 
     public short readShort() {
-        return 0;
+        return this.byteBuf.readShort();
     }
 
     public int readUnsignedShort() {
-        return 0;
+        return this.byteBuf.readUnsignedShort();
     }
 
     public int readMedium() {
-        return 0;
+        return this.byteBuf.readMedium();
     }
 
     public int readUnsignedMedium() {
-        return 0;
+        return this.byteBuf.readUnsignedMedium();
     }
 
     public int readInt() {
-        return 0;
+        return this.byteBuf.readInt();
     }
 
     public long readUnsignedInt() {
-        return 0;
+        return this.byteBuf.readUnsignedInt();
     }
 
     public long readLong() {
-        return 0;
+        return this.byteBuf.readLong();
     }
 
     public char readChar() {
-        return 0;
+        return this.byteBuf.readChar();
     }
 
     public float readFloat() {
-        return 0;
+        return this.byteBuf.readFloat();
     }
 
     public double readDouble() {
-        return 0;
+        return this.byteBuf.readDouble();
     }
 
     public ChannelBuffer readBytes(int paramInt) {
-        return null;
+        this.byteBuf.readBytes(paramInt);
+        return this;
     }
 
     public ChannelBuffer readSlice(int paramInt) {
-        return null;
-    }
-
-    public ChannelBuffer readBytes(ChannelBuffer paramByteBuf) {
-        return null;
-    }
-
-    public ChannelBuffer readBytes(ChannelBuffer paramByteBuf, int paramInt) {
-        return null;
-    }
-
-    public ChannelBuffer readBytes(ChannelBuffer paramByteBuf, int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.readSlice(paramInt);
+        return this;
     }
 
     public ChannelBuffer readBytes(byte[] paramArrayOfByte) {
-        return null;
+        this.byteBuf.readBytes(paramArrayOfByte);
+        return this;
     }
 
     public ChannelBuffer readBytes(byte[] paramArrayOfByte, int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.readBytes(paramArrayOfByte, paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer readBytes(ByteBuffer paramByteBuffer) {
-        return null;
+        this.byteBuf.readBytes(paramByteBuffer);
+        return this;
     }
 
     public ChannelBuffer readBytes(OutputStream paramOutputStream,
                                    int paramInt) throws IOException {
-        return null;
+        this.byteBuf.readBytes(paramOutputStream, paramInt);
+        return this;
     }
 
     public int readBytes(GatheringByteChannel paramGatheringByteChannel,
                          int paramInt) throws IOException {
-        return 0;
+        return this.byteBuf.readBytes(paramGatheringByteChannel, paramInt);
     }
 
     public ChannelBuffer skipBytes(int paramInt) {
-        return null;
+        this.byteBuf.skipBytes(paramInt);
+        return this;
     }
 
     public ChannelBuffer writeBoolean(boolean paramBoolean) {
-        return null;
+        this.byteBuf.writeBoolean(paramBoolean);
+        return this;
     }
 
     public ChannelBuffer writeByte(int paramInt) {
-        return null;
+        this.byteBuf.writeByte(paramInt);
+        return this;
     }
 
     public ChannelBuffer writeShort(int paramInt) {
-        return null;
+        this.byteBuf.writeShort(paramInt);
+        return this;
     }
 
     public ChannelBuffer writeMedium(int paramInt) {
-        return null;
+        this.byteBuf.writeMedium(paramInt);
+        return this;
     }
 
     public ChannelBuffer writeInt(int paramInt) {
-        return null;
+        this.byteBuf.writeInt(paramInt);
+        return this;
     }
 
     public ChannelBuffer writeLong(long paramLong) {
-        return null;
+        this.byteBuf.writeLong(paramLong);
+        return this;
     }
 
     public ChannelBuffer writeChar(int paramInt) {
-        return null;
+        this.byteBuf.writeChar(paramInt);
+        return this;
     }
 
     public ChannelBuffer writeFloat(float paramFloat) {
-        return null;
+        this.byteBuf.writeFloat(paramFloat);
+        return this;
     }
 
     public ChannelBuffer writeDouble(double paramDouble) {
-        return null;
-    }
-
-    public ChannelBuffer writeBytes(ChannelBuffer paramByteBuf) {
-        return null;
-    }
-
-    public ChannelBuffer writeBytes(ChannelBuffer paramByteBuf, int paramInt) {
-        return null;
-    }
-
-    public ChannelBuffer writeBytes(ChannelBuffer paramByteBuf, int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.writeDouble(paramDouble);
+        return this;
     }
 
     public ChannelBuffer writeBytes(byte[] paramArrayOfByte) {
-        return null;
+        this.byteBuf.writeBytes(paramArrayOfByte);
+        return this;
     }
 
     public ChannelBuffer writeBytes(byte[] paramArrayOfByte, int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.writeBytes(paramArrayOfByte, paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer writeBytes(ByteBuffer paramByteBuffer) {
-        return null;
+        this.byteBuf.writeBytes(paramByteBuffer);
+        return this;
     }
 
     public int writeBytes(InputStream paramInputStream, int paramInt) throws IOException {
-        return 0;
+        return this.byteBuf.writeBytes(paramInputStream, paramInt);
     }
 
     public int writeBytes(ScatteringByteChannel paramScatteringByteChannel,
                           int paramInt) throws IOException {
-        return 0;
+        return this.byteBuf.writeBytes(paramScatteringByteChannel, paramInt);
     }
 
     public ChannelBuffer writeZero(int paramInt) {
-        return null;
+        this.byteBuf.writeZero(paramInt);
+        return this;
     }
 
     public int indexOf(int paramInt1, int paramInt2, byte paramByte) {
-        return 0;
+        return this.byteBuf.indexOf(paramInt1, paramInt2, paramByte);
     }
 
     public int bytesBefore(byte paramByte) {
-        return 0;
+        return this.byteBuf.bytesBefore(paramByte);
     }
 
     public int bytesBefore(int paramInt, byte paramByte) {
-        return 0;
+        return this.byteBuf.bytesBefore(paramInt, paramByte);
     }
 
     public int bytesBefore(int paramInt1, int paramInt2, byte paramByte) {
-        return 0;
+        return this.byteBuf.bytesBefore(paramInt1, paramInt2, paramByte);
     }
 
     public ChannelBuffer copy() {
-        return null;
+        this.byteBuf.copy();
+        return this;
     }
 
     public ChannelBuffer copy(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.copy(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer slice() {
-        return null;
+        this.byteBuf.slice();
+        return this;
     }
 
     public ChannelBuffer slice(int paramInt1, int paramInt2) {
-        return null;
+        this.byteBuf.slice(paramInt1, paramInt2);
+        return this;
     }
 
     public ChannelBuffer duplicate() {
-        return null;
+        this.byteBuf.duplicate();
+        return this;
     }
 
     public int nioBufferCount() {
-        return 0;
+        return this.byteBuf.nioBufferCount();
     }
 
     public ByteBuffer nioBuffer() {
-        return null;
+        return this.byteBuf.nioBuffer();
     }
 
     public ByteBuffer nioBuffer(int paramInt1, int paramInt2) {
-        return null;
+        return this.byteBuf.nioBuffer(paramInt1, paramInt2);
     }
 
     public ByteBuffer internalNioBuffer(int paramInt1, int paramInt2) {
-        return null;
+        return this.byteBuf.internalNioBuffer(paramInt1, paramInt2);
     }
 
     public ByteBuffer[] nioBuffers() {
-        return null;
+        return this.byteBuf.nioBuffers();
     }
 
     public ByteBuffer[] nioBuffers(int paramInt1, int paramInt2) {
-        return null;
+        return this.byteBuf.nioBuffers(paramInt1, paramInt2);
     }
 
     public boolean hasArray() {
-        return false;
+        return this.byteBuf.hasArray();
     }
 
     public byte[] array() {
-        return null;
+        return this.byteBuf.array();
     }
 
     public int arrayOffset() {
-        return 0;
+        return this.byteBuf.arrayOffset();
     }
 
     public boolean hasMemoryAddress() {
-        return false;
+        return this.byteBuf.hasMemoryAddress();
     }
 
     public long memoryAddress() {
-        return 0;
+        return this.byteBuf.memoryAddress();
     }
 
     public String toString(Charset paramCharset) {
-        return null;
+        return this.byteBuf.toString(paramCharset);
     }
 
     public String toString(int paramInt1, int paramInt2, Charset paramCharset) {
-        return null;
+        return this.byteBuf.toString(paramInt1, paramInt2, paramCharset);
     }
 
     public int compareTo(ChannelBuffer paramByteBuf) {
-        return 0;
+        return this.byteBuf.compareTo(byteBuf);
     }
 
     public ChannelBuffer retain(int paramInt) {
-        return null;
+        this.byteBuf.retain(paramInt);
+        return this;
     }
 
     public ChannelBuffer retain() {
-        return null;
+        this.byteBuf.retain();
+        return this;
     }
 
     public ByteOrder order() {
-        return null;
+        return this.byteBuf.order();
+    }
+
+    public io.netty.buffer.ByteBuf getByteBuf() {
+        return byteBuf;
     }
 }

@@ -97,12 +97,6 @@ public interface ChannelBuffer {
 
     public double getDouble(int paramInt);
 
-    public ChannelBuffer getBytes(int paramInt, ChannelBuffer paramByteBuf);
-
-    public ChannelBuffer getBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2);
-
-    public ChannelBuffer getBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2, int paramInt3);
-
     public ChannelBuffer getBytes(int paramInt, byte[] paramArrayOfByte);
 
     public ChannelBuffer getBytes(int paramInt1, byte[] paramArrayOfByte, int paramInt2, int paramInt3);
@@ -132,12 +126,6 @@ public interface ChannelBuffer {
     public ChannelBuffer setFloat(int paramInt, float paramFloat);
 
     public ChannelBuffer setDouble(int paramInt, double paramDouble);
-
-    public ChannelBuffer setBytes(int paramInt, ChannelBuffer paramByteBuf);
-
-    public ChannelBuffer setBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2);
-
-    public ChannelBuffer setBytes(int paramInt1, ChannelBuffer paramByteBuf, int paramInt2, int paramInt3);
 
     public ChannelBuffer setBytes(int paramInt, byte[] paramArrayOfByte);
 
@@ -183,12 +171,6 @@ public interface ChannelBuffer {
 
     public ChannelBuffer readSlice(int paramInt);
 
-    public ChannelBuffer readBytes(ChannelBuffer paramByteBuf);
-
-    public ChannelBuffer readBytes(ChannelBuffer paramByteBuf, int paramInt);
-
-    public ChannelBuffer readBytes(ChannelBuffer paramByteBuf, int paramInt1, int paramInt2);
-
     public ChannelBuffer readBytes(byte[] paramArrayOfByte);
 
     public ChannelBuffer readBytes(byte[] paramArrayOfByte, int paramInt1, int paramInt2);
@@ -219,12 +201,6 @@ public interface ChannelBuffer {
     public ChannelBuffer writeFloat(float paramFloat);
 
     public ChannelBuffer writeDouble(double paramDouble);
-
-    public ChannelBuffer writeBytes(ChannelBuffer paramByteBuf);
-
-    public ChannelBuffer writeBytes(ChannelBuffer paramByteBuf, int paramInt);
-
-    public ChannelBuffer writeBytes(ChannelBuffer paramByteBuf, int paramInt1, int paramInt2);
 
     public ChannelBuffer writeBytes(byte[] paramArrayOfByte);
 
