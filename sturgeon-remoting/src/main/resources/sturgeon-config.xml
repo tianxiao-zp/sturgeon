@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sturgeon>
+	<netty>
+		<message>
+			<head-length></head-length>
+		</message>
+		<decoder>com.sturgeon.rpc.test.Student</decoder>
+		<encoder>com.sturgeon.rpc.test.Student</encoder>
+	</netty>
+</sturgeon>
