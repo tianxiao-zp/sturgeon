@@ -11,7 +11,6 @@ import com.sturgeon.remoting.api.transport.RemotingConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -27,7 +26,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  */
 public class NettyClient extends AbstractClient {
     private final RemotingConfig    config;
-    private volatile ChannelHandler handler;
     private EventLoopGroup          group;
     private Bootstrap               bootstrap;
     private Codec                   codec;
@@ -35,7 +33,7 @@ public class NettyClient extends AbstractClient {
     private volatile Channel        channel;
 
     public NettyClient(RemotingConfig config,
-                       ChannelEventListener listener, com.sturgeon.remoting.api.ChannelHandler channelHandler) throws RemotingException {
+                       ChannelEventListener listener, com.sturgeon.remoting.api.HeartBeatHandler channelHandler) throws RemotingException {
         super(config, listener, channelHandler);
         this.config = config;
         this.codec = getCodec();
@@ -77,5 +75,14 @@ public class NettyClient extends AbstractClient {
     }
 
     public void send(Object message, boolean sent) throws RemotingException {
+    }
+
+    @Override
+    protected com.sturgeon.remoting.api.Channel getChannel() {
+        Channel c = channel;
+        if (c == null || !c.isActive()) {
+            return null;
+        }
+        return NettyChannel.getOrAddChannel(getConfig(), c);
     }
 }

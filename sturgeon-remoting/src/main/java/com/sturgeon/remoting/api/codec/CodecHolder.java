@@ -18,7 +18,7 @@ public class CodecHolder {
         return CodecFactory.codecs.get(key);
     }
     
-    static class CodecFactory {
+    private static class CodecFactory {
         public final static Map<String, Codec> codecs = new HashMap<String, Codec>();
         static {
             // TODO 实例化编码器

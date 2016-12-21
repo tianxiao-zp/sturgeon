@@ -8,13 +8,9 @@ import com.sturgeon.remoting.api.Channel;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
 
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 
-@Sharable
 public class NettyHandle extends SimpleChannelInboundHandler<Object> {
     private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
     private final ChannelEventListener listener;

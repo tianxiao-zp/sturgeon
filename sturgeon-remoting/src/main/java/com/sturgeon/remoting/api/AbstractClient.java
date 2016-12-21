@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import org.apache.log4j.Logger;
 
 import com.sturgeon.common.Constants;
+import com.sturgeon.common.utils.NetUtils;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
@@ -21,7 +22,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     private final int               reconnect_interval;
 
     public AbstractClient(RemotingConfig config, ChannelEventListener listener,
-                          ChannelHandler channelHandler) throws RemotingException {
+                          HeartBeatHandler channelHandler) throws RemotingException {
         super(config, listener);
         this.connectAddress = config.toInetSocketAddress();
         this.reconnect_interval = config.getParameter("reconnectInterval", 2000);
@@ -37,7 +38,11 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     }
 
     public InetSocketAddress getLocalAddress() {
-        return null;
+        Channel channel = getChannel();
+        if (channel == null) {
+            return InetSocketAddress.createUnresolved(NetUtils.getLogHost(), 0);
+        }
+        return channel.getLocalAddress();
     }
 
     public void close() {
@@ -62,6 +67,9 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     protected abstract void doOpen() throws Throwable;
 
     protected abstract void doClose() throws Throwable;
+    
+    
+    protected abstract Channel getChannel();
 
     public InetSocketAddress getConnectAddress() {
         return connectAddress;

@@ -2,7 +2,10 @@ package com.sturgeon.remoting.netty;
 
 import org.apache.log4j.Logger;
 
-import com.sturgeon.remoting.api.ChannelHandler;
+import com.sturgeon.remoting.api.Channel;
+import com.sturgeon.remoting.api.HeartBeatHandler;
+import com.sturgeon.remoting.api.exception.RemotingException;
+import com.sturgeon.remoting.api.transport.RemotingConfig;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;
@@ -14,14 +17,14 @@ import io.netty.handler.timeout.IdleStateHandler;
  * @author tianxiao
  * @version $Id: IdleHeartBeatHandler.java, v 0.1 2016年12月18日 下午2:35:05 tianxiao Exp $
  */
-public class IdleHeartBeatHandler extends IdleStateHandler {
+public class IdleHeartBeatHandler extends IdleStateHandler implements HeartBeatHandler {
+    private static Logger logger = Logger.getLogger(IdleHeartBeatHandler.class.getName());
+    private volatile RemotingConfig config;
 
     public IdleHeartBeatHandler(int readerIdleTimeSeconds, int writerIdleTimeSeconds,
-                                int allIdleTimeSeconds) {
+                                int allIdleTimeSeconds, RemotingConfig config) {
         super(readerIdleTimeSeconds, writerIdleTimeSeconds, allIdleTimeSeconds);
     }
-
-    private static Logger logger = Logger.getLogger(IdleHeartBeatHandler.class.getName());
 
     @Override
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
@@ -31,11 +34,19 @@ public class IdleHeartBeatHandler extends IdleStateHandler {
             if (logger.isDebugEnabled()) {
                 logger.debug("Client heart beat.");
             }
-//            Message heartBeatMessage = new Message(new Header(PacketType.HEART_BEAT), new HeartBeat());
-//            ctx.writeAndFlush(heartBeatMessage);
+            NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         } else if (evt.state() == IdleState.READER_IDLE) {
             //读空闲，则关闭链路
             ctx.close();
+            NettyChannel.removeChannelIfDisconnected(ctx.channel());
         }
+    }
+
+    public RemotingConfig getRemotingConfig() {
+        return this.config;
+    }
+
+    public void sendHeartBeat(Channel channel, Object message) throws RemotingException {
+        channel.send(message, false);
     }
 }
