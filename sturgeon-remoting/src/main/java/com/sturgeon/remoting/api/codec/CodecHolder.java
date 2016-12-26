@@ -20,8 +20,9 @@ public class CodecHolder {
     
     private static class CodecFactory {
         public final static Map<String, Codec> codecs = new HashMap<String, Codec>();
+        // 后期可换成配置
         static {
-            // TODO 实例化编码器
+            codecs.put("sturgeon", new SturgeonCodec());
         }
     }
 }

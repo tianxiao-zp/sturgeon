@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.StringUtils;
 
+import sun.util.logging.resources.logging;
+
 /**
  * 
  * @author tianxiao
@@ -150,8 +152,8 @@ public class RemotingConfig implements Serializable {
     }
     
     public int getPositiveParameter(String key, int defaultValue) {
-        if (defaultValue <= 0) {
-            throw new IllegalArgumentException("defaultValue <= 0");
+        if (defaultValue < 0) {
+            throw new IllegalArgumentException("defaultValue < 0");
         }
         int value = getParameter(key, defaultValue);
         if (value <= 0) {
@@ -159,4 +161,5 @@ public class RemotingConfig implements Serializable {
         }
         return value;
     }
+    
 }

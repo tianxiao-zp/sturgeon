@@ -1,20 +1,25 @@
 package com.sturgeon.remoting.netty;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.sturgeon.common.Constants;
+import com.sturgeon.common.utils.NetUtils;
+import com.sturgeon.common.utils.ObjectUtils;
 import com.sturgeon.remoting.api.AbstractServer;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
+import com.sturgeon.remoting.api.transport.packet.Packet;
 import com.sturgeon.remoting.netty.utils.NettyThreadFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -26,16 +31,19 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 public class NettyServer extends AbstractServer {
     private Logger               logger = Logger.getLogger(NettyServer.class);
 
-    private Map<String, Channel> channels;                                    // <ip:port, channel>
+    private Map<String, com.sturgeon.remoting.api.Channel> channels;                                    // <ip:port, channel>
 
     EventLoopGroup               bossGroup;
 
     EventLoopGroup               workerGroup;
 
     private Channel              channel;
+    
+    private final ChannelHandler       channelHandler;
 
     public NettyServer(RemotingConfig config, ChannelEventListener listener) throws RemotingException {
         super(config, listener);
+        channelHandler = IdleHeartBeatHandler.warp(config, listener);
     }
 
     @Override
@@ -50,22 +58,24 @@ public class NettyServer extends AbstractServer {
         serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 256).option(ChannelOption.TCP_NODELAY, true)
             .childOption(ChannelOption.SO_KEEPALIVE, true);
+        final NettyHandler nettyHandle = new NettyHandler(getConfig(), getListener());
+        channels = nettyHandle.getChannels();
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-
             NettyCodecAdapter adapeter = new NettyCodecAdapter(getCodec(), getConfig());
-
             @Override
             protected void initChannel(SocketChannel channel) throws Exception {
-                NettyHandle nettyHandle = new NettyHandle(getConfig(), getListener());
                 ChannelPipeline pipeline = channel.pipeline();
                 pipeline.addLast("decoder", adapeter.getDecoder());
                 pipeline.addLast("encoder", adapeter.getEncoder());
                 pipeline.addLast("handler", nettyHandle);
+                //pipeline.addLast("timeout", IdleHeartBeatHandler.warp(getConfig(), getListener()));
             }
         });
         try {
-            ChannelFuture future = serverBootstrap.bind(getBindAddress()).sync();
+            ChannelFuture future = serverBootstrap.bind(9999).sync();
             channel = future.channel();
+            System.out.println("start");
+            channel.closeFuture().sync();
         } catch (InterruptedException e) {
             logger.error("", e);
         }
@@ -118,7 +128,15 @@ public class NettyServer extends AbstractServer {
     }
 
     public Collection<com.sturgeon.remoting.api.Channel> getChannels() {
-        return null;
+        Collection<com.sturgeon.remoting.api.Channel> chs = new HashSet<com.sturgeon.remoting.api.Channel>();
+        for (com.sturgeon.remoting.api.Channel channel : this.channels.values()) {
+            if (channel.isConnected()) {
+                chs.add(channel);
+            } else {
+                channels.remove(NetUtils.toAddressString(channel.getRemoteAddress()));
+            }
+        }
+        return chs;
     }
 
     public void send(Object message, boolean sent) throws RemotingException {

@@ -1,6 +1,7 @@
 package com.sturgeon.remoting.netty;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -12,6 +13,11 @@ import com.sturgeon.remoting.api.transport.RemotingConfig;
 
 import io.netty.channel.ChannelFuture;
 
+/**
+ * netty channel cantainer
+ * @author tianxiao
+ * @version $Id: NettyChannel.java, v 0.1 2016年12月21日 下午7:01:45 tianxiao Exp $
+ */
 public final class NettyChannel implements Channel {
     private io.netty.channel.Channel                                           channel;
 
@@ -41,7 +47,7 @@ public final class NettyChannel implements Channel {
         NettyChannel nettyChannel = channels.get(channel);
         if (nettyChannel == null) {
             NettyChannel ch = new NettyChannel(config, channel);
-            if (channel.isOpen() && channel.isActive()) {
+            if (channel.isOpen()) {
                 nettyChannel = channels.putIfAbsent(channel, ch);
             }
             if (nettyChannel == null) {
@@ -52,7 +58,7 @@ public final class NettyChannel implements Channel {
     }
 
     static void removeChannelIfDisconnected(io.netty.channel.Channel ch) {
-        if (ch != null && !ch.isActive()) {
+        if (ch != null && !ch.isOpen()) {
             channels.remove(ch);
         }
     }
@@ -62,7 +68,11 @@ public final class NettyChannel implements Channel {
     }
 
     public InetSocketAddress getLocalAddress() {
-        return (InetSocketAddress) channel.localAddress();
+        SocketAddress localAddress = channel.localAddress();
+        if (localAddress == null) {
+            localAddress = config.toInetSocketAddress();
+        }
+        return (InetSocketAddress) localAddress;
     }
 
     public void close() {

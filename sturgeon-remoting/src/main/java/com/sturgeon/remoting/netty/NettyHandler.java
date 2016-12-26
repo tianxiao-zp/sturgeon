@@ -6,29 +6,47 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.sturgeon.common.utils.NetUtils;
 import com.sturgeon.remoting.api.Channel;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
+import com.sturgeon.remoting.api.serializable.SerializableType;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
+import com.sturgeon.remoting.api.transport.packet.Header;
+import com.sturgeon.remoting.api.transport.packet.Packet;
+import com.sturgeon.remoting.api.transport.packet.PacketType;
+import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
+import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class NettyHandle extends SimpleChannelInboundHandler<Object> {
+@Sharable
+public class NettyHandler extends SimpleChannelInboundHandler<Packet> {
     private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
     private final ChannelEventListener listener;
     private volatile RemotingConfig    config;
 
-    public NettyHandle(RemotingConfig config, ChannelEventListener listener) {
+    public NettyHandler(RemotingConfig config, ChannelEventListener listener) {
         this.listener = listener;
         this.config = config;
     }
+    
+    public Map<String, Channel> getChannels() {
+        return channels;
+    }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext context, Object msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext context, Packet msg) throws Exception {
+        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, context.channel());
         try {
             listener.onReceived(ch, msg);
         } finally {
             NettyChannel.removeChannelIfDisconnected(context.channel());
         }
+    }
+    
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        ctx.flush();
     }
 
     /*
@@ -38,6 +56,7 @@ public class NettyHandle extends SimpleChannelInboundHandler<Object> {
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         super.handlerAdded(ctx);
+        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {
             channels.put(NetUtils.toAddressString(ch.getLocalAddress()), ch);
@@ -54,13 +73,8 @@ public class NettyHandle extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        String protocol = config.getProtocol();
         super.handlerRemoved(ctx);
-        NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
-        try {
-            listener.onDisconnected(ch);
-        } finally {
-            NettyChannel.removeChannelIfDisconnected(ctx.channel());
-        }
     }
 
     /*
@@ -70,6 +84,7 @@ public class NettyHandle extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
+        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {
             listener.onActive(ch);
@@ -88,6 +103,7 @@ public class NettyHandle extends SimpleChannelInboundHandler<Object> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
+        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {
             listener.onCaught(ch, cause);
@@ -97,7 +113,7 @@ public class NettyHandle extends SimpleChannelInboundHandler<Object> {
     }
     
     /**
-     * 超时时触发该方法
+     * 自定义事件处理
      * @author tianxiao
      * 2016年12月18日 下午3:54:32
      * @see io.netty.channel.ChannelInboundHandlerAdapter#userEventTriggered(io.netty.channel.ChannelHandlerContext, java.lang.Object)
@@ -114,5 +130,32 @@ public class NettyHandle extends SimpleChannelInboundHandler<Object> {
 //            else if (event.state() == IdleState.ALL_IDLE)
 //                System.out.println("all idle");
 //        }
+    }
+    
+    /**
+     * channelDisconnected、channelUnbound和channelClosed处理
+     * @author tianxiao
+     * 2016年12月22日 上午11:36:14
+     * @see io.netty.channel.ChannelInboundHandlerAdapter#channelInactive(io.netty.channel.ChannelHandlerContext)
+     * @return 
+     */
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        String protocol = config.getProtocol();
+        super.channelInactive(ctx);
+        NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
+        try {
+            listener.onDisconnected(ch);
+        } finally {
+            NettyChannel.removeChannelIfDisconnected(ctx.channel());
+        }
+    }
+    
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelRegistered(ctx);
+    }
+
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelUnregistered(ctx);
     }
 }

@@ -1,5 +1,6 @@
 package com.sturgeon.remoting.api.codec;
 
+import com.sturgeon.remoting.api.Channel;
 import com.sturgeon.remoting.api.io.ChannelBuffer;
 
 /**
@@ -16,7 +17,7 @@ public interface Codec {
      * @param buffer
      * @param message
      */
-    void encode(ChannelBuffer buffer, Object message);
+    ChannelBuffer encode(ChannelBuffer buffer,Channel channel, Object message);
     
     /**
      * 解码
@@ -25,5 +26,5 @@ public interface Codec {
      * @param buffer
      * @return
      */
-    Object decode(ChannelBuffer buffer);
+    Object decode(ChannelBuffer buffer, Channel channel);
 }

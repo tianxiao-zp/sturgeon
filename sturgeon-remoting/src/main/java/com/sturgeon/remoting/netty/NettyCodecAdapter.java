@@ -2,13 +2,15 @@ package com.sturgeon.remoting.netty;
 
 import java.util.List;
 
-import com.sturgeon.common.Constants;
 import com.sturgeon.remoting.api.codec.Codec;
+import com.sturgeon.remoting.api.io.ChannelBuffer;
 import com.sturgeon.remoting.api.io.NettyChannelBuffer;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
+import com.sturgeon.remoting.api.transport.packet.Packet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -19,10 +21,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @version $Id: NettyCodecAdapter.java, v 0.1 2016年12月5日 下午1:34:53 tianxiao Exp $
  */
 final class NettyCodecAdapter {
-    private ChannelHandler       decoder = new NettyDecoder();
-
-    private ChannelHandler       encoder = new NettyEncoder();
-
+    
     private final Codec          codec;
 
     private final RemotingConfig config;
@@ -36,35 +35,23 @@ final class NettyCodecAdapter {
     }
 
     public ChannelHandler getEncoder() {
-        return encoder;
+        return new NettyEncoder();
     }
 
     public ChannelHandler getDecoder() {
-        return decoder;
+        return new NettyDecoder();
     }
 
-    private class NettyDecoder extends ByteToMessageDecoder {
-
-        public NettyDecoder() {
-        }
+    public class NettyDecoder extends ByteToMessageDecoder {
 
         @Override
         public final void decode(ChannelHandlerContext ctx, ByteBuf in,
                                  List<Object> out) throws Exception {
-            //检测输入byteBuffer，避免分包粘包
-            if (in.readableBytes() < Constants.MIN_BUFFER_SIZE) {
+            if (in.readableBytes() > bufferSize) {
                 return;
             }
-            in.markReaderIndex();
-            int dataLength = in.readInt();
-            if (dataLength < 0) {
-                ctx.close();
-            }
-            if (in.readableBytes() < dataLength) {
-                in.resetReaderIndex();
-                return;
-            }
-            Object message = codec.decode(new NettyChannelBuffer(in));
+            NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
+            Object message = codec.decode(new NettyChannelBuffer(in), ch);
             if (message == null) {
                 return;
             }
@@ -77,12 +64,19 @@ final class NettyCodecAdapter {
         }
     }
 
-    private class NettyEncoder extends MessageToByteEncoder<Object> {
+    public class NettyEncoder extends MessageToByteEncoder<Packet> {
 
         @Override
-        protected void encode(ChannelHandlerContext paramChannelHandlerContext, Object message,
-                              ByteBuf paramByteBuf) throws Exception {
-            codec.encode(new NettyChannelBuffer(paramByteBuf), message);
+        protected void encode(ChannelHandlerContext ctx, Packet message,
+                              ByteBuf out) throws Exception {
+            String protocol = config.getProtocol();
+            NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
+            ChannelBuffer channelBuffer = codec.encode(new NettyChannelBuffer(out), ch, message);
+            NettyChannelBuffer buffer = null;
+            if (channelBuffer instanceof NettyChannelBuffer) {
+                buffer = (NettyChannelBuffer) channelBuffer;
+                out = buffer.getByteBuf();
+            }
         }
 
     }

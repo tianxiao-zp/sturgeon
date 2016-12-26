@@ -13,7 +13,7 @@ public class StringUtils {
     }
     
     public static boolean isEmpty(String s) {
-        if (s != null && EMPTY.equals(s)) {
+        if (s == null || EMPTY.equals(s)) {
             return true;
         }
         return false;

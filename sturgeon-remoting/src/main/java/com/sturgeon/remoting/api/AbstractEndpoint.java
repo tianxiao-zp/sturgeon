@@ -5,6 +5,7 @@ import com.sturgeon.remoting.api.codec.Codec;
 import com.sturgeon.remoting.api.codec.CodecHolder;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
+import com.sturgeon.remoting.api.transport.packet.Packet;
 
 /**
  * AbstractEndpoint

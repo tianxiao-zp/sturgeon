@@ -9,6 +9,7 @@ import com.sturgeon.common.utils.NetUtils;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
+import com.sturgeon.remoting.api.transport.packet.Packet;
 
 /**
  * AbstractClient
@@ -21,8 +22,8 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     private final int               timeout;
     private final int               reconnect_interval;
 
-    public AbstractClient(RemotingConfig config, ChannelEventListener listener,
-                          HeartBeatHandler channelHandler) throws RemotingException {
+    public AbstractClient(RemotingConfig config,
+                          ChannelEventListener listener) throws RemotingException {
         super(config, listener);
         this.connectAddress = config.toInetSocketAddress();
         this.reconnect_interval = config.getParameter("reconnectInterval", 2000);
@@ -34,6 +35,14 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
             throw new RemotingException(config.toInetSocketAddress() + "Failed to connect "
                                         + getClass().getSimpleName() + " on " + getConnectAddress()
                                         + ", cause: " + t.getMessage());
+        }
+        
+        try {
+            doConnect();
+        } catch (Throwable t) {
+            throw new RemotingException(config.toInetSocketAddress() + "Failed to connect "
+                    + getClass().getSimpleName() + " on " + getConnectAddress()
+                    + ", cause: " + t.getMessage());
         }
     }
 
@@ -67,8 +76,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     protected abstract void doOpen() throws Throwable;
 
     protected abstract void doClose() throws Throwable;
-    
-    
+
     protected abstract Channel getChannel();
 
     public InetSocketAddress getConnectAddress() {
