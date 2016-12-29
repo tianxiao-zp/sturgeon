@@ -6,13 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.sturgeon.common.utils.NetUtils;
 import com.sturgeon.remoting.api.Channel;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
-import com.sturgeon.remoting.api.serializable.SerializableType;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
-import com.sturgeon.remoting.api.transport.packet.Header;
-import com.sturgeon.remoting.api.transport.packet.Packet;
-import com.sturgeon.remoting.api.transport.packet.PacketType;
-import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
-import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -60,7 +54,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         super.handlerAdded(ctx);
-        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {
             channels.put(NetUtils.toAddressString(ch.getLocalAddress()), ch);
@@ -77,7 +70,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        String protocol = config.getProtocol();
         super.handlerRemoved(ctx);
         NettyChannel.removeChannelIfDisconnected(ctx.channel());
     }
@@ -89,7 +81,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {
             listener.onActive(ch);
@@ -108,7 +99,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
-        String protocol = config.getProtocol();
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {
             listener.onCaught(ch, cause);
@@ -146,7 +136,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        String protocol = config.getProtocol();
         super.channelInactive(ctx);
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         try {

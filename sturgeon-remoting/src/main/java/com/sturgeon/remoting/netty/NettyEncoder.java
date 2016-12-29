@@ -21,7 +21,6 @@ public class NettyEncoder extends MessageToByteEncoder<Object> {
         @Override
         protected void encode(ChannelHandlerContext ctx, Object message,
                               ByteBuf out) throws Exception {
-            String protocol = config.getProtocol();
             NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
             ChannelBuffer channelBuffer = codec.encode(new NettyChannelBuffer(out), ch, message);
             NettyChannelBuffer buffer = null;

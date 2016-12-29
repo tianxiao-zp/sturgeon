@@ -12,7 +12,6 @@ import com.sturgeon.remoting.api.listener.HeartBeatChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
 import com.sturgeon.remoting.api.transport.packet.Header;
 import com.sturgeon.remoting.api.transport.packet.Packet;
-import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

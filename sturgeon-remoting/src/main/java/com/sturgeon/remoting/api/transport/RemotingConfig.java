@@ -10,8 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.StringUtils;
 
-import sun.util.logging.resources.logging;
-
 /**
  * 
  * @author tianxiao

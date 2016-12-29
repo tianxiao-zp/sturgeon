@@ -3,7 +3,6 @@ package com.sturgeon.remoting.netty;
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.NamedThreadFactory;
 import com.sturgeon.remoting.api.AbstractClient;
-import com.sturgeon.remoting.api.codec.Codec;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.serializable.SerializableType;
@@ -30,18 +29,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  * @version $Id: NettyClient.java, v 0.1 2016年12月8日 下午5:14:35 tianxiao Exp $
  */
 public class NettyClient extends AbstractClient {
-    private final RemotingConfig config;
     private EventLoopGroup       group;
     private Bootstrap            bootstrap;
-    private Codec                codec;
 
     private volatile Channel     channel;
 
     public NettyClient(RemotingConfig config,
                        ChannelEventListener listener) throws RemotingException {
         super(config, listener);
-        this.config = config;
-        this.codec = getCodec();
     }
 
     protected void doOpen() {
@@ -66,7 +61,7 @@ public class NettyClient extends AbstractClient {
     
     public static void main(String[] args) throws RemotingException {
         RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 7788);
-        NettyClient netty = new NettyClient(config, new ChannelEventListener() {
+        new NettyClient(config, new ChannelEventListener() {
             
             public void onSent(com.sturgeon.remoting.api.Channel channel,
                                Object message) throws RemotingException {

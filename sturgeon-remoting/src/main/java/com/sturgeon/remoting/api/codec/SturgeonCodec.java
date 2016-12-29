@@ -9,7 +9,6 @@ import com.sturgeon.remoting.api.transport.packet.Packet;
 import com.sturgeon.remoting.api.transport.packet.PacketType;
 import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
 import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister.Pack;
 
 /**
  * SturgeonCodec

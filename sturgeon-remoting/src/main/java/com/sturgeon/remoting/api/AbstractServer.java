@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
-import com.sturgeon.remoting.api.transport.packet.Packet;
 
 
 /**
