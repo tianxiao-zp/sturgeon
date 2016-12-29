@@ -78,6 +78,9 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     protected abstract void doClose() throws Throwable;
 
     protected abstract Channel getChannel();
+    
+    public void reconnect() throws RemotingException {
+    }
 
     public InetSocketAddress getConnectAddress() {
         return connectAddress;

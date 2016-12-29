@@ -1,15 +1,17 @@
 package com.sturgeon.remoting.netty;
 
-import java.util.concurrent.TimeUnit;
-
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.NamedThreadFactory;
 import com.sturgeon.remoting.api.AbstractClient;
 import com.sturgeon.remoting.api.codec.Codec;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
+import com.sturgeon.remoting.api.serializable.SerializableType;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
-import com.sturgeon.remoting.api.transport.packet.Packet;
+import com.sturgeon.remoting.api.transport.packet.Header;
+import com.sturgeon.remoting.api.transport.packet.PacketType;
+import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
+import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -51,19 +53,46 @@ public class NettyClient extends AbstractClient {
         bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getTimeout());
         final NettyHandler nettyHandle = new NettyHandler(getConfig(), getListener());
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-            NettyCodecAdapter adapter = new NettyCodecAdapter(codec, config);
 
             @Override
             protected void initChannel(SocketChannel channel) throws Exception {
                 ChannelPipeline pipeline = channel.pipeline();
-                pipeline.addLast("decoder", adapter.getDecoder());
-                pipeline.addLast("encoder", adapter.getEncoder());
+                pipeline.addLast("decoder", new NettyDecoder(getConfig(), getCodec()));
+                pipeline.addLast("encoder", new NettyEncoder(getConfig(), getCodec()));
                 pipeline.addLast("handler", nettyHandle);
             }
         });
     }
-
-    public void reconnect() throws RemotingException {
+    
+    public static void main(String[] args) throws RemotingException {
+        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 7788);
+        NettyClient netty = new NettyClient(config, new ChannelEventListener() {
+            
+            public void onSent(com.sturgeon.remoting.api.Channel channel,
+                               Object message) throws RemotingException {
+            }
+            
+            public void onReceived(com.sturgeon.remoting.api.Channel channel,
+                                   Object message) throws RemotingException {
+            }
+            
+            public void onDisconnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
+            }
+            
+            public void onConnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
+            }
+            
+            public void onCaught(com.sturgeon.remoting.api.Channel channel,
+                                 Throwable exception) throws RemotingException {
+            }
+            
+            public void onActive(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
+            }
+        });
+        
+        while (true) {
+            
+        }
     }
 
     @Override
@@ -74,11 +103,15 @@ public class NettyClient extends AbstractClient {
     @Override
     protected void doConnect() throws Throwable {
         ChannelFuture future = bootstrap.connect("127.0.0.1", 9999);
-        channel = future.channel();
-        future.awaitUninterruptibly(3000, TimeUnit.MILLISECONDS);
+        // awaitUninterruptibly() 等待连接成功
+        Channel channel = future.awaitUninterruptibly().channel();
+        Header header = SturgeonHeader.builer().needReturn(false).packetType(PacketType.RPC).serializableType(SerializableType.PROTOBUFFER);
+        SturgeonPacket message = new SturgeonPacket(header, "i'm client");
+        channel.writeAndFlush(message).awaitUninterruptibly();
+//        future.awaitUninterruptibly(3000, TimeUnit.MILLISECONDS);
         boolean success = future.isSuccess();
         System.out.println(success);
-        channel.closeFuture().sync();
+//        channel.closeFuture().sync();
     }
 
     public void send(Object message, boolean sent) throws RemotingException {

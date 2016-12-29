@@ -8,18 +8,15 @@ import org.apache.log4j.Logger;
 
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.NetUtils;
-import com.sturgeon.common.utils.ObjectUtils;
 import com.sturgeon.remoting.api.AbstractServer;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
-import com.sturgeon.remoting.api.transport.packet.Packet;
 import com.sturgeon.remoting.netty.utils.NettyThreadFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
@@ -39,11 +36,8 @@ public class NettyServer extends AbstractServer {
 
     private Channel              channel;
     
-    private final ChannelHandler       channelHandler;
-
     public NettyServer(RemotingConfig config, ChannelEventListener listener) throws RemotingException {
         super(config, listener);
-        channelHandler = IdleHeartBeatHandler.warp(config, listener);
     }
 
     @Override
@@ -61,12 +55,11 @@ public class NettyServer extends AbstractServer {
         final NettyHandler nettyHandle = new NettyHandler(getConfig(), getListener());
         channels = nettyHandle.getChannels();
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-            NettyCodecAdapter adapeter = new NettyCodecAdapter(getCodec(), getConfig());
             @Override
             protected void initChannel(SocketChannel channel) throws Exception {
                 ChannelPipeline pipeline = channel.pipeline();
-                pipeline.addLast("decoder", adapeter.getDecoder());
-                pipeline.addLast("encoder", adapeter.getEncoder());
+                pipeline.addLast("decoder", new NettyDecoder(getConfig(), getCodec()));
+                pipeline.addLast("encoder", new NettyEncoder(getConfig(), getCodec()));
                 pipeline.addLast("handler", nettyHandle);
                 //pipeline.addLast("timeout", IdleHeartBeatHandler.warp(getConfig(), getListener()));
             }
@@ -79,6 +72,34 @@ public class NettyServer extends AbstractServer {
         } catch (InterruptedException e) {
             logger.error("", e);
         }
+    }
+    
+    public static void main(String[] args) throws RemotingException {
+        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 7788);
+        NettyServer netty = new NettyServer(config, new ChannelEventListener() {
+            
+            public void onSent(com.sturgeon.remoting.api.Channel channel,
+                               Object message) throws RemotingException {
+            }
+            
+            public void onReceived(com.sturgeon.remoting.api.Channel channel,
+                                   Object message) throws RemotingException {
+            }
+            
+            public void onDisconnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
+            }
+            
+            public void onConnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
+            }
+            
+            public void onCaught(com.sturgeon.remoting.api.Channel channel,
+                                 Throwable exception) throws RemotingException {
+            }
+            
+            public void onActive(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
+            }
+        });
+        netty.doOpen();
     }
 
     @Override
@@ -148,3 +169,4 @@ public class NettyServer extends AbstractServer {
         }
     }
 }
+

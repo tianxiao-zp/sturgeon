@@ -19,7 +19,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 @Sharable
-public class NettyHandler extends SimpleChannelInboundHandler<Packet> {
+public class NettyHandler extends SimpleChannelInboundHandler<Object> {
     private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
     private final ChannelEventListener listener;
     private volatile RemotingConfig    config;
@@ -34,8 +34,12 @@ public class NettyHandler extends SimpleChannelInboundHandler<Packet> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext context, Packet msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext context, Object msg) throws Exception {
+        System.out.println(msg);
         String protocol = config.getProtocol();
+        if ("server".equals(protocol)) {
+            context.writeAndFlush(System.currentTimeMillis() + "\r\n");
+        }
         NettyChannel ch = NettyChannel.getOrAddChannel(config, context.channel());
         try {
             listener.onReceived(ch, msg);
@@ -75,6 +79,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<Packet> {
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         String protocol = config.getProtocol();
         super.handlerRemoved(ctx);
+        NettyChannel.removeChannelIfDisconnected(ctx.channel());
     }
 
     /*
