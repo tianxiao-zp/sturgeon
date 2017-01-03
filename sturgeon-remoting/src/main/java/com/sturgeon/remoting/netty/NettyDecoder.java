@@ -23,9 +23,6 @@ public class NettyDecoder extends ByteToMessageDecoder {
     @Override
     public final void decode(ChannelHandlerContext ctx, ByteBuf in,
                              List<Object> out) throws Exception {
-        //        if (in.readableBytes() > bufferSize) {
-        //            return;
-        //        }
         NettyChannel ch = NettyChannel.getOrAddChannel(config, ctx.channel());
         Object message = codec.decode(new NettyChannelBuffer(in), ch);
         if (message == null) {

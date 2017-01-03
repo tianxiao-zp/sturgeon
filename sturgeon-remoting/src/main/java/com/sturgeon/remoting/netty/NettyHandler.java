@@ -29,11 +29,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext context, Object msg) throws Exception {
-        System.out.println(msg);
-        String protocol = config.getProtocol();
-        if ("server".equals(protocol)) {
-            context.writeAndFlush(System.currentTimeMillis() + "\r\n");
-        }
         NettyChannel ch = NettyChannel.getOrAddChannel(config, context.channel());
         try {
             listener.onReceived(ch, msg);

@@ -84,10 +84,6 @@ public class NettyClient extends AbstractClient {
             public void onActive(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
             }
         });
-        
-        while (true) {
-            
-        }
     }
 
     @Override
@@ -97,12 +93,12 @@ public class NettyClient extends AbstractClient {
 
     @Override
     protected void doConnect() throws Throwable {
-        ChannelFuture future = bootstrap.connect("127.0.0.1", 9999);
+        ChannelFuture future = bootstrap.connect(getConfig().getHost(), 9999);
         // awaitUninterruptibly() 等待连接成功
-        Channel channel = future.awaitUninterruptibly().channel();
-        Header header = SturgeonHeader.builer().needReturn(false).packetType(PacketType.RPC).serializableType(SerializableType.PROTOBUFFER);
-        SturgeonPacket message = new SturgeonPacket(header, "i'm client");
-        channel.writeAndFlush(message).awaitUninterruptibly();
+        channel = future.awaitUninterruptibly().channel();
+//        Header header = SturgeonHeader.builer().needReturn(false).packetType(PacketType.RPC).serializableType(SerializableType.PROTOBUFFER);
+//        SturgeonPacket message = new SturgeonPacket(header, "i'm client");
+//        channel.writeAndFlush(message).awaitUninterruptibly();
 //        future.awaitUninterruptibly(3000, TimeUnit.MILLISECONDS);
         boolean success = future.isSuccess();
         System.out.println(success);

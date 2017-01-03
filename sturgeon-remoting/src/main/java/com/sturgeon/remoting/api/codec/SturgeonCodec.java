@@ -53,12 +53,12 @@ public class SturgeonCodec implements Codec {
         if (dataLength < 0) {
             return null;
         }
-        if (in.readableBytes() < dataLength) {
-            in.resetReaderIndex();
-            return null;
-        }
-        short serializableType = in.readShort();
+//        if (in.readableBytes() < dataLength) {
+//            in.resetReaderIndex();
+//            return null;
+//        }
         short packetType = in.readShort();
+        short serializableType = in.readShort();
         boolean needReturn = in.readBoolean();
         return SturgeonHeader.builer().length(dataLength).packetType(PacketType.valueOf(packetType))
             .serializableType(SerializableType.valueOf(serializableType)).needReturn(needReturn);

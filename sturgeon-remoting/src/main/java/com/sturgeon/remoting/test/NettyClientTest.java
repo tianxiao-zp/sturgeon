@@ -13,35 +13,43 @@ import com.sturgeon.remoting.api.transport.packet.PacketType;
 import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
 import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 import com.sturgeon.remoting.netty.NettyTransporter;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister.Pack;
 
 public class NettyClientTest {
     public static void main(String[] args) throws RemotingException {
         Transporter transporter = new NettyTransporter();
-        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 7788);
+        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 9999);
         Client connect = transporter.connect(config, new ChannelEventListener() {
-            
+
             public void onSent(Channel channel, Object message) throws RemotingException {
             }
-            
+
             public void onReceived(Channel channel, Object message) throws RemotingException {
+
             }
-            
+
             public void onDisconnected(Channel channel) throws RemotingException {
             }
-            
+
             public void onConnected(Channel channel) throws RemotingException {
-                
+
             }
-            
+
             public void onCaught(Channel channel, Throwable exception) throws RemotingException {
             }
-            
+
             public void onActive(Channel channel) throws RemotingException {
             }
         });
-        Header header = SturgeonHeader.builer().needReturn(false).packetType(PacketType.RPC).serializableType(SerializableType.PROTOBUFFER);
+        Header header = SturgeonHeader.builer().needReturn(false).packetType(PacketType.RPC)
+            .serializableType(SerializableType.PROTOBUFFER);
         Packet message = new SturgeonPacket(header, "i'm client");
-        System.out.println("1");
-        connect.send(message, false);
+
+        for (int i = 0; i < 10; i++) {
+            connect.send(message, false);
+        }
+
+        while (true) {
+        }
     }
 }

@@ -65,9 +65,8 @@ public class NettyServer extends AbstractServer {
             }
         });
         try {
-            ChannelFuture future = serverBootstrap.bind(9999).sync();
+            ChannelFuture future = serverBootstrap.bind(getConfig().getPort()).sync();
             channel = future.channel();
-            System.out.println("start");
             channel.closeFuture().sync();
         } catch (InterruptedException e) {
             logger.error("", e);
@@ -75,7 +74,7 @@ public class NettyServer extends AbstractServer {
     }
     
     public static void main(String[] args) throws RemotingException {
-        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 7788);
+        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 9999);
         NettyServer netty = new NettyServer(config, new ChannelEventListener() {
             
             public void onSent(com.sturgeon.remoting.api.Channel channel,
@@ -99,7 +98,6 @@ public class NettyServer extends AbstractServer {
             public void onActive(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
             }
         });
-        netty.doOpen();
     }
 
     @Override

@@ -23,6 +23,7 @@ public class SturgeonPacket implements Packet {
         this.body = body;
         if (header instanceof SturgeonHeader) {
             this.header = (SturgeonHeader) header;
+            this.header.length(SturgeonHeader.HEADER_LENGTH + this.body.length);
         }
     }
     
@@ -32,6 +33,7 @@ public class SturgeonPacket implements Packet {
         this.body = serializable.encode(body);
         if (header instanceof SturgeonHeader) {
             this.header = (SturgeonHeader) header;
+            this.header.length(SturgeonHeader.HEADER_LENGTH + this.body.length);
         }
     }
 
