@@ -72,33 +72,6 @@ public class NettyServer extends AbstractServer {
             logger.error("", e);
         }
     }
-    
-    public static void main(String[] args) throws RemotingException {
-        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 9999);
-        NettyServer netty = new NettyServer(config, new ChannelEventListener() {
-            
-            public void onSent(com.sturgeon.remoting.api.Channel channel,
-                               Object message) throws RemotingException {
-            }
-            
-            public void onReceived(com.sturgeon.remoting.api.Channel channel,
-                                   Object message) throws RemotingException {
-            }
-            
-            public void onDisconnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
-            }
-            
-            public void onConnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
-            }
-            
-            public void onCaught(com.sturgeon.remoting.api.Channel channel,
-                                 Throwable exception) throws RemotingException {
-            }
-            
-            public void onActive(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
-            }
-        });
-    }
 
     @Override
     protected void doClose() throws Throwable {

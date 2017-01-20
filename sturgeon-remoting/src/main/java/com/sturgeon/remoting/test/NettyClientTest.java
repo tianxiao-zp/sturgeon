@@ -13,7 +13,6 @@ import com.sturgeon.remoting.api.transport.packet.PacketType;
 import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
 import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 import com.sturgeon.remoting.netty.NettyTransporter;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister.Pack;
 
 public class NettyClientTest {
     public static void main(String[] args) throws RemotingException {
@@ -25,7 +24,10 @@ public class NettyClientTest {
             }
 
             public void onReceived(Channel channel, Object message) throws RemotingException {
-
+                if (message != null && message instanceof Packet) {
+                    Packet msg = (Packet) message;
+                    System.out.println(msg.getBody(String.class));
+                }
             }
 
             public void onDisconnected(Channel channel) throws RemotingException {

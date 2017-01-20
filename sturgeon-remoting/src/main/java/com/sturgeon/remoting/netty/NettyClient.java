@@ -5,12 +5,7 @@ import com.sturgeon.common.utils.NamedThreadFactory;
 import com.sturgeon.remoting.api.AbstractClient;
 import com.sturgeon.remoting.api.exception.RemotingException;
 import com.sturgeon.remoting.api.listener.ChannelEventListener;
-import com.sturgeon.remoting.api.serializable.SerializableType;
 import com.sturgeon.remoting.api.transport.RemotingConfig;
-import com.sturgeon.remoting.api.transport.packet.Header;
-import com.sturgeon.remoting.api.transport.packet.PacketType;
-import com.sturgeon.remoting.api.transport.packet.SturgeonHeader;
-import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -58,33 +53,6 @@ public class NettyClient extends AbstractClient {
             }
         });
     }
-    
-    public static void main(String[] args) throws RemotingException {
-        RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 7788);
-        new NettyClient(config, new ChannelEventListener() {
-            
-            public void onSent(com.sturgeon.remoting.api.Channel channel,
-                               Object message) throws RemotingException {
-            }
-            
-            public void onReceived(com.sturgeon.remoting.api.Channel channel,
-                                   Object message) throws RemotingException {
-            }
-            
-            public void onDisconnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
-            }
-            
-            public void onConnected(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
-            }
-            
-            public void onCaught(com.sturgeon.remoting.api.Channel channel,
-                                 Throwable exception) throws RemotingException {
-            }
-            
-            public void onActive(com.sturgeon.remoting.api.Channel channel) throws RemotingException {
-            }
-        });
-    }
 
     @Override
     protected void doClose() throws Throwable {
@@ -100,8 +68,7 @@ public class NettyClient extends AbstractClient {
 //        SturgeonPacket message = new SturgeonPacket(header, "i'm client");
 //        channel.writeAndFlush(message).awaitUninterruptibly();
 //        future.awaitUninterruptibly(3000, TimeUnit.MILLISECONDS);
-        boolean success = future.isSuccess();
-        System.out.println(success);
+        future.isSuccess();
 //        channel.closeFuture().sync();
     }
 
