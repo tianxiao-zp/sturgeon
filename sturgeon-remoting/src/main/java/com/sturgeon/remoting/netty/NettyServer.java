@@ -61,7 +61,7 @@ public class NettyServer extends AbstractServer {
                 pipeline.addLast("decoder", new NettyDecoder(getConfig(), getCodec()));
                 pipeline.addLast("encoder", new NettyEncoder(getConfig(), getCodec()));
                 pipeline.addLast("handler", nettyHandle);
-                //pipeline.addLast("timeout", IdleHeartBeatHandler.warp(getConfig(), getListener()));
+                pipeline.addLast("timeout", IdleHeartBeatHandler.warp(getConfig(), getListener()));
             }
         });
         try {
