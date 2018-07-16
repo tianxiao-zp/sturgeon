@@ -1,11 +1,12 @@
 package com.sturgeon.common.config.server;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import com.sturgeon.common.config.SturgeonRPCConfig;
 
 public class NettyConfig extends SturgeonRPCConfig {
-    private static Logger logger = Logger.getLogger(NettyConfig.class);
+    private static Logger logger = LoggerFactory.getLogger(NettyConfig.class);
     private int messageHeadLength;
     
     private static NettyConfig nettyConfig;

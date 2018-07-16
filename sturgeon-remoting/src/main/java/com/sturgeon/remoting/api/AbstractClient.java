@@ -2,7 +2,8 @@ package com.sturgeon.remoting.api;
 
 import java.net.InetSocketAddress;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.NetUtils;
@@ -16,7 +17,7 @@ import com.sturgeon.remoting.api.transport.RemotingConfig;
  * @version $Id: AbstractClient.java, v 0.1 2016年12月12日 下午7:03:36 tianxiao Exp $
  */
 public abstract class AbstractClient extends AbstractEndpoint implements Client {
-    private static final Logger     logger = Logger.getLogger(AbstractClient.class);
+    private static final Logger     logger = LoggerFactory.getLogger(AbstractClient.class);
     private final InetSocketAddress connectAddress;
     private final int               timeout;
     private final int               reconnect_interval;

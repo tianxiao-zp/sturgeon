@@ -63,10 +63,12 @@ public final class NettyChannel implements Channel {
         }
     }
 
+    @Override
     public RemotingConfig getConfig() {
         return config;
     }
 
+    @Override
     public InetSocketAddress getLocalAddress() {
         SocketAddress localAddress = channel.localAddress();
         if (localAddress == null) {
@@ -75,38 +77,49 @@ public final class NettyChannel implements Channel {
         return (InetSocketAddress) localAddress;
     }
 
+    @Override
     public void close() {
         closed = true;
     }
 
+    @Override
     public boolean isClosed() {
         return closed;
     }
 
+    @Override
     public InetSocketAddress getRemoteAddress() {
         return (InetSocketAddress) channel.remoteAddress();
     }
 
+    @Override
     public boolean isConnected() {
         return channel.isOpen() && channel.isActive();
     }
 
+    @Override
     public boolean hasAttribute(String key) {
         return attributes.containsKey(key);
     }
 
+    @Override
     public Object getAttribute(String key) {
         return attributes.get(key);
     }
 
+    @Override
     public void setAttribute(String key, Object value) {
-        if (value == null) { // The null value unallowed in the ConcurrentHashMap.
+        /**
+         * The null value unallowed in the ConcurrentHashMap.
+         */
+        if (value == null) {
             attributes.remove(key);
         } else {
             attributes.put(key, value);
         }
     }
 
+    @Override
     public void removeAttribute(String key) {
         attributes.remove(key);
     }
@@ -128,6 +141,7 @@ public final class NettyChannel implements Channel {
         return true;
     }
 
+    @Override
     public void send(Object message, boolean sent) throws RemotingException {
         if (isClosed()) {
             throw new RemotingException("channel:" + getLocalAddress() + " is closed");

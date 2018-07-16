@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import com.sturgeon.common.Constants;
 import com.sturgeon.common.utils.NetUtils;
@@ -26,9 +27,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NettyServer extends AbstractServer {
-    private Logger               logger = Logger.getLogger(NettyServer.class);
+    private Logger               logger = LoggerFactory.getLogger(NettyServer.class);
 
-    private Map<String, com.sturgeon.remoting.api.Channel> channels;                                    // <ip:port, channel>
+    /**
+     * <ip:port, channel>
+     */
+    private Map<String, com.sturgeon.remoting.api.Channel> channels;
 
     EventLoopGroup               bossGroup;
 
@@ -112,6 +116,7 @@ public class NettyServer extends AbstractServer {
         }
     }
 
+    @Override
     public boolean isBound() {
         if (channel == null) {
             return false;
@@ -119,6 +124,7 @@ public class NettyServer extends AbstractServer {
         return channel.isOpen();
     }
 
+    @Override
     public Collection<com.sturgeon.remoting.api.Channel> getChannels() {
         Collection<com.sturgeon.remoting.api.Channel> chs = new HashSet<com.sturgeon.remoting.api.Channel>();
         for (com.sturgeon.remoting.api.Channel channel : this.channels.values()) {
@@ -131,6 +137,7 @@ public class NettyServer extends AbstractServer {
         return chs;
     }
 
+    @Override
     public void send(Object message, boolean sent) throws RemotingException {
         Collection<com.sturgeon.remoting.api.Channel> channels = getChannels();
         for (com.sturgeon.remoting.api.Channel channel : channels) {

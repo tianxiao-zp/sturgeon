@@ -2,7 +2,7 @@ package com.sturgeon.remoting.netty;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.sturgeon.common.Constants;
 import com.sturgeon.remoting.api.Channel;
@@ -18,6 +18,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import org.slf4j.LoggerFactory;
 
 /**
  * 心跳检测处理器
@@ -26,7 +27,7 @@ import io.netty.handler.timeout.IdleStateHandler;
  */
 public class IdleHeartBeatHandler extends IdleStateHandler
                                   implements HeartBeatChannelEventListener<ChannelHandler> {
-    private static Logger           logger = Logger.getLogger(IdleHeartBeatHandler.class.getName());
+    private static Logger           logger = LoggerFactory.getLogger(IdleHeartBeatHandler.class.getName());
     private volatile RemotingConfig config;
     final ChannelEventListener      listener;
     

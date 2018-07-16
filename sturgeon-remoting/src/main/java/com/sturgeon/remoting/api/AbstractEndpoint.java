@@ -26,6 +26,7 @@ public abstract class AbstractEndpoint implements Endpoint, Resetable {
         this.codec = getChannelCodec(config);
     }
 
+    @Override
     public RemotingConfig getConfig() {
         return this.config;
     }
@@ -42,6 +43,7 @@ public abstract class AbstractEndpoint implements Endpoint, Resetable {
         return CodecHolder.getCodec(parameter);
     }
 
+    @Override
     public void reset(RemotingConfig config) {
         if (isClosed()) {
             throw new IllegalStateException("Failed to reset config" + config
@@ -66,6 +68,7 @@ public abstract class AbstractEndpoint implements Endpoint, Resetable {
         this.codec = codec;
     }
 
+    @Override
     public void close() {
         closed = true;
     }
@@ -75,6 +78,7 @@ public abstract class AbstractEndpoint implements Endpoint, Resetable {
         close();
     }
 
+    @Override
     public boolean isClosed() {
         return closed;
     }

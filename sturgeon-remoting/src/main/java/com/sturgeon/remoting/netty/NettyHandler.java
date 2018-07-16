@@ -14,7 +14,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 @Sharable
 public class NettyHandler extends SimpleChannelInboundHandler<Object> {
-    private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
+    /**
+     * <ip:port, channel>
+     */
+    private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>();
     private final ChannelEventListener listener;
     private volatile RemotingConfig    config;
 
@@ -42,7 +45,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
         ctx.flush();
     }
 
-    /*
+    /**
      * 覆盖了 handlerAdded() 事件处理方法。
      * 每当从服务端收到新的客户端连接时
      */
@@ -59,7 +62,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
 
     }
 
-    /*
+    /**
      * .覆盖了 handlerRemoved() 事件处理方法。
      * 每当从服务端收到客户端断开时
      */
@@ -69,7 +72,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
         NettyChannel.removeChannelIfDisconnected(ctx.channel());
     }
 
-    /*
+    /**
      * 覆盖channelActive 方法在channel被启用的时候触发（在建立连接的时候）
      * 覆盖了 channelActive() 事件处理方法。服务端监听到客户端活动
      */
@@ -84,7 +87,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
         }
     }
 
-    /*
+    /**
      * exceptionCaught() 事件处理方法是当出现 Throwable 对象才会被调用，
      * 即当 Netty 由于 IO 错误或者处理器在处理事件时抛出的异常时。
      * 在大部分情况下，捕获的异常应该被记录下来并且把关联的 channel 给关闭掉。
@@ -139,11 +142,13 @@ public class NettyHandler extends SimpleChannelInboundHandler<Object> {
             NettyChannel.removeChannelIfDisconnected(ctx.channel());
         }
     }
-    
+
+    @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
     }
 
+    @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
     }

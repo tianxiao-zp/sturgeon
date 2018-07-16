@@ -20,9 +20,11 @@ public class NettyClientTest {
         RemotingConfig config = new RemotingConfig("client", "127.0.0.1", 9999);
         Client connect = transporter.connect(config, new ChannelEventListener() {
 
+            @Override
             public void onSent(Channel channel, Object message) throws RemotingException {
             }
 
+            @Override
             public void onReceived(Channel channel, Object message) throws RemotingException {
                 if (message != null && message instanceof Packet) {
                     Packet msg = (Packet) message;
@@ -30,16 +32,20 @@ public class NettyClientTest {
                 }
             }
 
+            @Override
             public void onDisconnected(Channel channel) throws RemotingException {
             }
 
+            @Override
             public void onConnected(Channel channel) throws RemotingException {
 
             }
 
+            @Override
             public void onCaught(Channel channel, Throwable exception) throws RemotingException {
             }
 
+            @Override
             public void onActive(Channel channel) throws RemotingException {
             }
         });

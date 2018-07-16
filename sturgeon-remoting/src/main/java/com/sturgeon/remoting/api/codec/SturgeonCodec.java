@@ -17,6 +17,7 @@ import com.sturgeon.remoting.api.transport.packet.SturgeonPacket;
  */
 public class SturgeonCodec implements Codec {
 
+    @Override
     public ChannelBuffer encode(ChannelBuffer out, Channel channel, Object message) {
         if (message instanceof Packet) {
             Packet msg = (Packet) message;
@@ -32,6 +33,7 @@ public class SturgeonCodec implements Codec {
         return out;
     }
 
+    @Override
     public Object decode(ChannelBuffer in, Channel channel) {
         Header header = readHeader(in);
         if (ObjectUtils.isNull(header)) {
@@ -53,10 +55,6 @@ public class SturgeonCodec implements Codec {
         if (dataLength < 0) {
             return null;
         }
-//        if (in.readableBytes() < dataLength) {
-//            in.resetReaderIndex();
-//            return null;
-//        }
         short packetType = in.readShort();
         short serializableType = in.readShort();
         boolean needReturn = in.readBoolean();

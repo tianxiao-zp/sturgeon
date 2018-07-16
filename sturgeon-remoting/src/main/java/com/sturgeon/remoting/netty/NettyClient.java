@@ -34,6 +34,7 @@ public class NettyClient extends AbstractClient {
         super(config, listener);
     }
 
+    @Override
     protected void doOpen() {
         group = new NioEventLoopGroup(Constants.DEFAULT_IO_THREADS,
             new NamedThreadFactory("NettyClientBoss", true));
@@ -72,6 +73,7 @@ public class NettyClient extends AbstractClient {
 //        channel.closeFuture().sync();
     }
 
+    @Override
     public void send(Object message, boolean sent) throws RemotingException {
         com.sturgeon.remoting.api.Channel channel = getChannel();
         if (channel == null || !channel.isConnected()) {

@@ -34,6 +34,7 @@ public class ProtobufferSerializable implements Serializable {
         idStrategy.registerDelegate(timestampDelegate);
     }
 
+    @Override
     public <T> T decode(byte[] bytes, Class<T> clz) {
         if (bytes == null || bytes.length == 0) {
             return null;
@@ -49,6 +50,7 @@ public class ProtobufferSerializable implements Serializable {
         }
     }
 
+    @Override
     public <T> byte[] encode(T object) {
         if (object == null) {
             return null;
@@ -79,23 +81,28 @@ public class ProtobufferSerializable implements Serializable {
 
     class TimestampDelegate implements Delegate<Timestamp> {
 
+        @Override
         public FieldType getFieldType() {
             return FieldType.FIXED64;
         }
 
+        @Override
         public Class<?> typeClass() {
             return Timestamp.class;
         }
 
+        @Override
         public Timestamp readFrom(Input input) throws IOException {
             return new Timestamp(input.readFixed64());
         }
 
+        @Override
         public void writeTo(Output output, int number, Timestamp value,
                             boolean repeated) throws IOException {
             output.writeFixed64(number, value.getTime(), repeated);
         }
 
+        @Override
         public void transfer(Pipe pipe, Input input, Output output, int number,
                              boolean repeated) throws IOException {
             output.writeFixed64(number, input.readFixed64(), repeated);

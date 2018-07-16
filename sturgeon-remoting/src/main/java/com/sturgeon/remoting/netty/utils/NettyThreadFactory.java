@@ -19,6 +19,7 @@ public class NettyThreadFactory implements ThreadFactory {
     /** 线程组 @author tianxiao 2016年12月1日 上午11:57:38 */
     private final ThreadGroup          group;
 
+    @Override
     public Thread newThread(Runnable runnable) {
         String name = prefix + threadNum.getAndIncrement();
         Thread ret = new Thread(group, runnable, name, 0);

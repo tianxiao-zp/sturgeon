@@ -9,11 +9,13 @@ import com.sturgeon.remoting.api.transport.RemotingConfig;
 
 public class NettyTransporter implements Transporter {
 
+    @Override
     public Server bind(RemotingConfig config,
                        ChannelEventListener listener) throws RemotingException {
         return new NettyServer(config, listener);
     }
 
+    @Override
     public Client connect(RemotingConfig config,
                           ChannelEventListener listener) throws RemotingException {
         return new NettyClient(config, listener);
